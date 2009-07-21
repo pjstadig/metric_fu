@@ -33,10 +33,13 @@ module MetricFu
       begin
         FileUtils.rm_rf(MetricFu::Rcov.metric_directory, :verbose => false)
         Dir.mkdir(MetricFu::Rcov.metric_directory)
-        test_files = FileList[*MetricFu.rcov[:test_files]].join(' ')
-        rcov_opts = MetricFu.rcov[:rcov_opts].join(' ')
-        output = ">> #{MetricFu::Rcov.metric_directory}/rcov.txt"
-        `rcov #{test_files} #{rcov_opts} #{output}`
+
+        MetricFu.rcov[:test_files].each do |tf|
+          test_files = FileList[*tf].join(' ')
+          rcov_opts = MetricFu.rcov[:rcov_opts].join(' ')
+          output = ">> #{MetricFu::Rcov.metric_directory}/rcov.txt"
+          `rcov #{test_files} #{rcov_opts} #{output}`
+        end
       rescue LoadError
         if RUBY_PLATFORM =~ /java/
           puts 'running in jruby - rcov tasks not available'
@@ -74,14 +77,14 @@ module MetricFu
         @global_total_lines_run += lines_run = lines.find_all {|line| line[:was_run] == true }.length
         @global_total_lines += total_lines = lines.length
         percent_run = ((lines_run.to_f / total_lines.to_f) * 100).round
-        files[fname][:percent_run] = percent_run 
+        files[fname][:percent_run] = percent_run
       end
       @rcov = files
     end
 
     def to_h
       global_percent_run = ((@global_total_lines_run.to_f / @global_total_lines.to_f) * 100)
-      {:rcov => @rcov.merge({:global_percent_run => round_to_tenths(global_percent_run) })}   
+      {:rcov => @rcov.merge({:global_percent_run => round_to_tenths(global_percent_run) })}
     end
   end
 end
