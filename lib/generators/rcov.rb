@@ -34,11 +34,12 @@ module MetricFu
         FileUtils.rm_rf(MetricFu::Rcov.metric_directory, :verbose => false)
         Dir.mkdir(MetricFu::Rcov.metric_directory)
 
-        MetricFu.rcov[:test_files].each do |tf|
-          test_files = FileList[*tf].join(' ')
-          rcov_opts = MetricFu.rcov[:rcov_opts].join(' ')
+        MetricFu.rcov.each do |conf|
+          test_files = FileList[*conf[:test_files]].join(' ')
+          rcov_opts = conf[:rcov_opts].join(' ')
           output = ">> #{MetricFu::Rcov.metric_directory}/rcov.txt"
-          `rcov #{test_files} #{rcov_opts} #{output}`
+          setup = conf[:setup] ? "#{conf[:setup]} && " : ''
+          `#{setup} rcov #{test_files} #{rcov_opts} #{output}`
         end
       rescue LoadError
         if RUBY_PLATFORM =~ /java/
