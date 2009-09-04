@@ -18,6 +18,7 @@ module MetricFu
         #what files are we going to test
         test_files = MetricFu.dcov[:test_files].join(' ')
         
+        
         #set Dcov Options (See dcov rdocs)
         dcov_opts = MetricFu.dcov[:dcov_opts].nil? ? "" : MetricFu.dcov[:dcov_opts].join(' ')
         
