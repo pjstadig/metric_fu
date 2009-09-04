@@ -16,7 +16,7 @@ module MetricFu
         Dir.mkdir(MetricFu::Dcov.metric_directory)
         
         #what files are we going to test
-        test_files = MetricFu.dcov[:test_files].join(' ')
+        test_files =  MetricFu.dcov[:test_files].join(' ')
         
         
         #set Dcov Options (See dcov rdocs)
