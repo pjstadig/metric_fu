@@ -2,3 +2,5 @@
 previous_failures.txt
 tmp/*
 *.gem
+.project
+.loadpath
